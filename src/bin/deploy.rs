@@ -24,8 +24,7 @@ fn main() {
         .map(|entry| entry.expect("failed to read dir entry").path())
         .collect();
 
-    let options = CopyOptions::new();
-    move_items(&items, "docs", &options).expect("failed to move dir");
+    move_items(&items, "docs", &CopyOptions::new()).expect("failed to move dir");
 
     remove_dir("docs/public").expect("failed to remove docs/public");
 }
