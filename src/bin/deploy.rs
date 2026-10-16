@@ -1,10 +1,10 @@
 use std::{
-    fs::{read_dir, remove_dir, remove_dir_all},
-    path::{Path, PathBuf},
+    fs::{remove_dir, remove_dir_all},
+    path::Path,
     process::Command,
 };
 
-use fs_extra::{dir::CopyOptions, move_items};
+use fs_extra::dir::{move_dir, CopyOptions};
 
 fn main() {
     if Path::new("docs").exists() {
@@ -19,12 +19,12 @@ fn main() {
         .status()
         .expect("failed to run dx");
 
-    let items: Vec<PathBuf> = read_dir("docs/public")
-        .expect("failed to read docs/public")
-        .map(|entry| entry.expect("failed to read dir entry").path())
-        .collect();
-
-    move_items(&items, "docs", &CopyOptions::new()).expect("failed to move dir");
+    move_dir(
+        "docs/public",
+        "docs",
+        &CopyOptions::new().content_only(true),
+    )
+    .expect("failed to move dir");
 
     remove_dir("docs/public").expect("failed to remove docs/public");
 }
